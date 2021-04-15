@@ -16,6 +16,8 @@
 #include "EntityManager.h"
 #include "PointLight.h"
 
+#include "cugl.h"
+
 // When debugging, the code will execute from "out/build/x64-Debug/". That last folder will have the name of your configuration.
 // We need to go three levels back to the root directory and into "src" before we can see the "Shaders" folder.
 // The build directory might be different with other IDEs and OS, just add a preprocessor conditional statement for your case when you encounter it.
@@ -582,6 +584,14 @@ int main() {
             selectedModel->scale(0.95);
         }
     });
+
+    // CUGL stuff
+
+    cugl::Vector axis; // Vector pointing at viewer in earth's frame
+    cugl::Quaternion ori; // Orientation of the earth
+
+    //
+
 
 	// Loop until window closed
     GLfloat last_time = 0;
