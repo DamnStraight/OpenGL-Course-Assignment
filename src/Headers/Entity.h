@@ -34,6 +34,7 @@ public:
     inline void set_texture(const Texture* newTexture) { mesh->set_texture(newTexture); }
 
     mat4 create_transform() const;
+    mat4 create_transform(glm::mat4) const;
 
     inline const TexturedMesh * get_mesh() const {
         return mesh;

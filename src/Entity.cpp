@@ -54,3 +54,13 @@ mat4 Entity::create_transform() const {
     matrix = glm::scale(matrix, scaleXYZ);
     return matrix;
 }
+
+mat4 Entity::create_transform(glm::mat4 lul) const {
+    mat4 matrix = glm::translate(mat4(1.0f), pos);
+    matrix = matrix * lul;
+    matrix = glm::rotate(matrix, rot.x * glm::pi<float>() / 180.0f, vec3(1, 0, 0));
+    matrix = glm::rotate(matrix, rot.y * glm::pi<float>() / 180.0f, vec3(0, 1, 0));
+    matrix = glm::rotate(matrix, rot.z * glm::pi<float>() / 180.0f, vec3(0, 0, 1));
+    matrix = glm::scale(matrix, scaleXYZ);
+    return matrix;
+}

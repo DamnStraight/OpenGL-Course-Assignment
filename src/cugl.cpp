@@ -1026,11 +1026,48 @@ namespace cugl
         m[3][3] = 1;
     }
 
+    void Quaternion::matrix(GLfloat ** m) const
+    {
+        // Gives same direction as glRotatef
+        m[0] = new GLfloat[4];
+        m[1] = new GLfloat[4];
+        m[2] = new GLfloat[4];
+        m[3] = new GLfloat[4];
+
+
+        m[0][0] = GLfloat(1 - 2 * (v.y * v.y + v.z * v.z));
+        m[1][0] = GLfloat(2 * (v.x * v.y - v.z * s));
+        m[2][0] = GLfloat(2 * (v.z * v.x + v.y * s));
+        m[3][0] = 0;
+
+        m[0][1] = GLfloat(2 * (v.x * v.y + v.z * s));
+        m[1][1] = GLfloat(1 - 2 * (v.z * v.z + v.x * v.x));
+        m[2][1] = GLfloat(2 * (v.y * v.z - v.x * s));
+        m[3][1] = 0;
+
+        m[0][2] = GLfloat(2 * (v.z * v.x - v.y * s));
+        m[1][2] = GLfloat(2 * (v.y * v.z + v.x * s));
+        m[2][2] = GLfloat(1 - 2 * (v.y * v.y + v.x * v.x));
+        m[3][2] = 0;
+
+        m[0][3] = 0;
+        m[1][3] = 0;
+        m[2][3] = 0;
+        m[3][3] = 1;
+    }
+
     void Quaternion::apply() const
     {
         GL_Matrix m;
         matrix(m);
         glMultMatrixf(&m[0][0]);
+    }
+
+    float ** Quaternion::get_matrix() const
+    {
+        GLfloat ** m = new GLfloat*[4];
+        matrix(m);
+        return m;
     }
 
     void Quaternion::euler(double & xr, double & yr, double & zr) const

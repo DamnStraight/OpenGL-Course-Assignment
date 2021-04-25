@@ -1416,6 +1416,8 @@ namespace cugl
          * Apply the current quaternion to the current OpenGL matrix.
          */
         void apply() const;
+        void matrix(GLfloat ** m) const;
+        float ** get_matrix() const;
 
         /**
          * Return the axis of rotation of this quaternion.

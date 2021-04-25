@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "Mesh.h"
 #include "Shader.h"
@@ -589,6 +590,26 @@ int main() {
 
     cugl::Vector axis; // Vector pointing at viewer in earth's frame
     cugl::Quaternion ori; // Orientation of the earth
+    double earthRotation = 0;
+    const double DIR_STEP = 0.01;
+
+    axis = cugl::Vector(0, sin(earthRotation), cos(earthRotation));
+    cugl::Quaternion d(axis, DIR_STEP * -1);
+    ori = d * ori;
+
+    float ** test = ori.get_matrix();
+
+
+    glm::mat4 bbb = glm::make_mat4x4(*test);
+
+
+    std::cout << glm::to_string(bbb) << std::endl;
+
+//    for (int i = 0; i < 4; i++) {
+//        for (int j = 0; j < 4; j++) {
+//            printf("lole %f", test[i][j]);
+//        }
+//    }
 
     //
 
@@ -655,6 +676,18 @@ int main() {
         app_shader.use_shader();
         glUniform1i(app_shader.get_use_texture_location(), textureToggle);
         glUniform1i(app_shader.get_use_lighting_location(), true);
+
+        //
+
+//        axis = cugl::Vector(0, sin(earthRotation), cos(earthRotation));
+//        cugl::Quaternion d(axis, DIR_STEP * -1);
+//        ori = d * ori;
+//
+//        glLoadIdentity();
+//        ori.apply();
+        //
+
+
         entityRenderer.render(camera, entityManager);
         app_shader.set_point_light(point_light);
 
