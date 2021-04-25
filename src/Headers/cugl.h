@@ -1140,6 +1140,12 @@ namespace cugl
          */
         friend std::ostream & operator<<(std::ostream & os, const Matrix & m);
 
+        /**
+         * Convert explicitly an object of this class to an object of class glm::mat4x4.
+         * static_cast<glm::mat4x4>(Matrix) will be usable with Matrix.
+         */
+        operator glm::mat4x4() const;
+
     private:
 
         /** The elements of the matrix. */
@@ -1166,7 +1172,7 @@ namespace cugl
         /**
          * Construct the quaternion (1,(0,0,0)) (the null rotation).
          */
-        Quaternion() : s(1)
+        Quaternion() : s(1), v(0.0f)
         {}
 
         /**
@@ -1211,7 +1217,7 @@ namespace cugl
          * This function may report BAD_ROTATION_MATRIX.
          * \pre The matrix must be a rotation matrix.
          */
-        Quaternion(Matrix m);
+        Quaternion(glm::mat4x4 m);
 
         /**
          * Construct a quaternion from Euler angles.
@@ -1413,7 +1419,7 @@ namespace cugl
          * Compute the rotation matrix corresponding to this quaternion
          * and store it in the Matrix \c m.
          */
-        void matrix(Matrix & m) const;
+        void matrix(glm::mat4x4& m) const;
 
         /**
          * Compute the rotation matrix corresponding to this quaternion
@@ -3018,6 +3024,16 @@ namespace cugl
         m[3][2] /= s;
         m[3][3] /= s;
         return *this;
+    }
+
+    inline Matrix::operator glm::mat4x4() const
+    {
+        return glm::mat4x4(
+            m[0][0], m[0][1], m[0][2], m[0][3],
+            m[1][0], m[1][1], m[1][2], m[1][3],
+            m[2][0], m[2][1], m[2][2], m[2][3],
+            m[3][0], m[3][1], m[3][2], m[3][3]
+        );
     }
 
     inline Matrix & Matrix::operator*=(GLfloat s)
