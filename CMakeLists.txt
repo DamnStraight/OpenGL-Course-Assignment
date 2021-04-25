@@ -15,6 +15,7 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glew REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
+find_package(GLUT REQUIRED)
 find_path(STB_INCLUDE_DIRS "stb.h")
 
 # Specify the project's include directory
@@ -27,7 +28,7 @@ file(GLOB PA2_SRC "src/*.cpp")
 add_executable ("PA2" ${PA2_SRC})
 
 # Link the needed libraries along with the executable
-target_link_libraries("PA2" PRIVATE glfw GLEW::GLEW glm assimp::assimp)
+target_link_libraries("PA2" PRIVATE glfw GLUT::GLUT GLEW::GLEW glm assimp::assimp)
 target_include_directories("PA2" PRIVATE ${STB_INCLUDE_DIRS})
 
 # Delete Resource directory if it already exists to prevent zombie files
