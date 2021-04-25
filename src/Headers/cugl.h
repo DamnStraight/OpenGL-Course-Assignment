@@ -36,22 +36,25 @@
  * \todo bool isVisible(Point) - harder than it looks
  */
 
-#ifdef __APPLE__
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <GLUT/glut.h>
-#else
-#ifdef _WIN32
-#include <Windows.h>
-#endif
+//#ifdef __APPLE__
+//#include <OpenGL/gl.h>
+//#include <OpenGL/glu.h>
+//#include <GLUT/glut.h>
+//#else
+//#ifdef _WIN32
+//#include <Windows.h>
+//#endif
 
-#define FREEGLUT_STATIC
-#define _LIB
-#define FREEGLUT_LIB_PRAGMAS 0
+//#define FREEGLUT_STATIC
+//#define _LIB
+//#define FREEGLUT_LIB_PRAGMAS 0
 //#include <gl/GL.h>
 //#include <gl/GLU.h>
-#include <gl/freeglut.h>
-#endif
+//#include <gl/freeglut.h>
+//#endif
+
+#include <gl/glew.h>
+#include <glm/glm.hpp>
 
 #include <iostream>
 #include <cmath>
@@ -704,6 +707,12 @@ namespace cugl
         Vector operator/=(GLfloat scale);
 
         /**
+         * Convert explicitly an object of this class to an object of class glm::vec3.
+         * static_cast<glm::vec3>(Vector) will be usable with Vector.
+         */
+        operator glm::vec3() const;
+
+        /**
          * Normalize this vector.
          * See also \a Vector::unit().
          * Reports error ZERO_NORM if the vector is zero.
@@ -1151,9 +1160,6 @@ namespace cugl
     {
     public:
 
-        friend class Vector;
-        friend class Matrix;
-
         /**
          * Construct the quaternion (1,(0,0,0)) (the null rotation).
          */
@@ -1164,7 +1170,7 @@ namespace cugl
          * Construct the quaternion (s, (x,y,z)).
          */
         Quaternion(GLfloat s, GLfloat x, GLfloat y, GLfloat z)
-                : s(s), v(Vector(x,y,z))
+                : s(s), v(glm::vec3(x,y,z))
         {}
 
         /**
@@ -1173,7 +1179,7 @@ namespace cugl
          * in which case the quaternion represents a rotation through
          * 90 degrees about the axis \a v.
          */
-        Quaternion(const Vector & v) : s(0), v(v)
+        Quaternion(const glm::vec3 & v) : s(0), v(v)
         {}
 
         /**
@@ -1182,7 +1188,7 @@ namespace cugl
          * \param s is the scalar component of the quaternion.
          * \param v is the vector component of the quaternion.
          */
-        Quaternion(GLfloat s, const Vector & v) : s(s), v(v)
+        Quaternion(GLfloat s, const glm::vec3 & v) : s(s), v(v)
         {}
 
         /**
@@ -1192,7 +1198,7 @@ namespace cugl
          * \param axis gives the axis of rotation.
          * \param angle gives the amount of the rotation.
          */
-        Quaternion(Vector axis, double angle)
+        Quaternion(glm::vec3 axis, double angle)
                 : s(GLfloat(cos(angle/2))), v(GLfloat(sin(angle/2)) * axis)
         {}
 
@@ -1224,7 +1230,7 @@ namespace cugl
          * The quaternion, applied to \a u, will yield \a v.
          * \pre The vectors \a u and \a v must be unit vectors.
          */
-        Quaternion(const Vector & u, const Vector & v);
+        Quaternion(const glm::vec3& u, const glm::vec3& w);
 
         /**
          * Add the quaternion q to this quaternion.
@@ -1265,13 +1271,13 @@ namespace cugl
          * Promote the vector \a v to a quaternion \a qv and
          * return the quaternion product \a qv*q.
          */
-        friend Quaternion operator*(const Vector & v, const Quaternion & q);
+        friend Quaternion operator*(const glm::vec3& v, const Quaternion & q);
 
         /**
          * Promote the vector \a v to a quaternion \a qv and
          * return the quaternion product \a q*qv.
          */
-        friend Quaternion operator*(const Quaternion & q, const Vector & v);
+        friend Quaternion operator*(const Quaternion & q, const glm::vec3& v);
 
         /** REMOVED: ambiguous operattion - need left and right quotients.
          * Return the quaternion ratio \a q/r.
@@ -1372,13 +1378,13 @@ namespace cugl
          * The vector \c w is not changed.
          * \return the rotated vector \c q.inv()*w*q.
          */
-        Vector apply(const Vector & w) const;
+        glm::vec3 apply(const glm::vec3& w) const;
 
         /**
          * Return Vector component \a v of the quaternion \a q = \a (s,v).
          * The same effect can be achieved with the constructor \c Vector::Vector(q).
          */
-        Vector vector() const;
+        glm::vec3 vector() const;
 
         /**
          * Return Scalar component \a s of the quaternion \a q = \a (s,v).
@@ -1422,7 +1428,7 @@ namespace cugl
          * \pre The quaternon must be a unit quaternion.
          * \return a unit vector giving the axis of rotation of the quaternion.
          */
-        Vector axis() const;
+        glm::vec3 axis() const;
 
         /**
          * Return the amount of rotation of this quaternion.
@@ -1439,7 +1445,7 @@ namespace cugl
          * \param omega is an angular velocity vector.
          * \param dt is the time increment for integration.
          */
-        void integrate(const Vector & omega, double dt);
+        void integrate(const glm::vec3& omega, double dt);
 
         /**
          * Return Euler angles for this quaternion.
@@ -1474,7 +1480,7 @@ namespace cugl
         friend Quaternion log(const Quaternion & q)
         {
             return (q.s == 1) ?
-                   Quaternion(0.0, Vector()) :
+                   Quaternion(0.0, glm::vec3()) :
                    Quaternion(0.0, (acos(q.s) / sqrt(1 - q. s * q.s))* q.v);
         }
 
@@ -1485,7 +1491,7 @@ namespace cugl
          */
         friend Quaternion exp(const Quaternion & q)
         {
-            Vector a = q.v;
+            glm::vec3 a = q.v;
             GLfloat angle = a.length();
             return (angle == 0) ?
                    Quaternion() :
@@ -1496,7 +1502,7 @@ namespace cugl
          * exp(v) is a quaternion.  The vector is treated as a "pure" quaternion
          * (that is, as a member of the Lie algebra of the quaternion group).
          */
-        friend Quaternion exp(const Vector & v)
+        friend Quaternion exp(const glm::vec3& v)
         {
             GLfloat angle = v.length();
             return (angle == 0) ?
@@ -1559,7 +1565,7 @@ namespace cugl
         GLfloat s;
 
         /** Vector component of quaternion. */
-        Vector v;
+        glm::vec3 v;
     };
 
 
@@ -3165,9 +3171,9 @@ namespace cugl
         return *this;
     }
 
-    inline Vector Quaternion::apply(const Vector & w) const
+    inline glm::vec3 Quaternion::apply(const glm::vec3& w) const
     {
-        return Vector
+        return glm::vec3
                 (
                         -(-w[0] * v[0] - w[1] * v[1] - w[2] * v[2]) * v[0] + s * (s * w[0] + w[1] * v[2] - w[2] * v[1])
                         - v[1] * (s * w[2] + w[0] * v[1] - w[1] * v[0]) + v[2] * (s * w[1] + w[2] * v[0] - w[0] * v[2]),
@@ -3178,7 +3184,7 @@ namespace cugl
                 );
     }
 
-    inline Vector Quaternion::vector() const
+    inline glm::vec3 Quaternion::vector() const
     {
         return v;
     }
@@ -3190,7 +3196,7 @@ namespace cugl
 
     inline GLfloat Quaternion::norm() const
     {
-        return s * s + v.norm();
+        return s * s + v.length();
     }
 
     inline GLfloat Quaternion::magnitude() const
@@ -3203,9 +3209,9 @@ namespace cugl
         return Quaternion(s, -v);
     }
 
-    inline Vector Quaternion::axis() const
+    inline glm::vec3 Quaternion::axis() const
     {
-        return v.unit();
+        return glm::normalize(v);
     }
 
     inline double Quaternion::angle() const
@@ -3221,7 +3227,7 @@ namespace cugl
     inline Quaternion & Quaternion::operator*=(const Quaternion & q)
     {
         GLfloat ns = s * q.s - v[0] * q.v[0] - v[1] * q.v[1] - v[2] * q.v[2];
-        v = Vector(
+        v = glm::vec3(
                 q.s * v[0] + s * q.v[0] + v[1] * q.v[2] - v[2] * q.v[1],
                 q.s * v[1] + s * q.v[1] + v[2] * q.v[0] - v[0] * q.v[2],
                 q.s * v[2] + s * q.v[2] + v[0] * q.v[1] - v[1] * q.v[0] );
@@ -3258,7 +3264,7 @@ namespace cugl
                 );
     }
 
-    inline Quaternion operator*(const Vector & v, const Quaternion & q)
+    inline Quaternion operator*(const glm::vec3& v, const Quaternion & q)
     {
         return Quaternion
                 (
@@ -3269,7 +3275,7 @@ namespace cugl
                 );
     }
 
-    inline Quaternion operator*(const Quaternion & q, const Vector & v)
+    inline Quaternion operator*(const Quaternion & q, const glm::vec3& v)
     {
         return Quaternion
                 (
@@ -3284,7 +3290,7 @@ namespace cugl
     {
         GLfloat den = q.norm();
         GLfloat ns = (s * q.s + v[0] * q.v[0] + v[1] * q.v[1] + v[2] * q.v[2]) / den;
-        v = Vector
+        v = glm::vec3
                 (
                         (q.s * v[0] - s * q.v[0] - v[1] * q.v[2] + v[2] * q.v[1]) / den,
                         (q.s * v[1] - s * q.v[1] - v[2] * q.v[0] + v[0] * q.v[2]) / den,

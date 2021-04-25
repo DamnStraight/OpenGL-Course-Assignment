@@ -434,6 +434,9 @@ void omni_shadow_map_pass(Shader * shader, PointLight * light)
 }
 
 int main() {
+    cugl::Quaternion quat();
+
+    /*
     // Window creation
     Window main_window(1024, 768);
 	int result = main_window.init();
@@ -682,6 +685,6 @@ int main() {
 		main_window.swap_buffers();
 
 	}
-
+    */
 	return 0;
 }

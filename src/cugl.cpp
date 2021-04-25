@@ -88,7 +88,7 @@ namespace cugl
 
     Point::Point (const Quaternion & q)
     {
-        Vector v = q.vector();
+        glm::vec3 v = q.vector();
         x = v[0];
         y = v[1];
         z = v[2];
@@ -444,6 +444,11 @@ namespace cugl
             z /= scale;
         }
         return *this;
+    }
+
+    Vector::operator glm::vec3() const
+    {
+        return glm::vec3(x, y, z);
     }
 
     ostream & operator<<(ostream & os, const Vector & v)
@@ -869,7 +874,7 @@ namespace cugl
         }
         GLfloat scale = GLfloat(sqrt(sqs));
         return Quaternion(scale / 2,
-                          Vector
+            glm::vec3
                                   (
                                           (m[1][2] - m[2][1]) / (2 * scale),
                                           (m[2][0] - m[0][2]) / (2 * scale),
@@ -890,7 +895,7 @@ namespace cugl
         }
         GLfloat scale = GLfloat(sqrt(sqs));
         s = scale / 2;
-        v = Vector
+        v = glm::vec3
                 (
                         (m(1,2) - m(2,1)) / (2 * scale),
                         (m(2,0) - m(0,2)) / (2 * scale),
@@ -922,11 +927,11 @@ namespace cugl
         s    = p[3];
     }
 
-    Quaternion::Quaternion(const Vector & u, const Vector & w)
+    Quaternion::Quaternion(const glm::vec3& u, const glm::vec3& w)
     {
-        Vector axis = cross(u, w);
+        glm::vec3 axis = glm::cross(u, w);
         double angle = acos(dot(u, w));
-        v = GLfloat(sin(angle/2)) * axis.unit();
+        v = GLfloat(sin(angle/2)) * glm::normalize(axis);
         s = GLfloat(cos(angle/2));
     }
 
@@ -1046,10 +1051,10 @@ namespace cugl
         zr = atan2(static_cast<double>(2 * (v.x * v.y + v.z * s)),sqx - sqy - sqz + sqs);
     }
 
-    void Quaternion::integrate(const Vector & omega, double dt)
+    void Quaternion::integrate(const glm::vec3& omega, double dt)
     {
         // 090801 reversed order of multiplication
-        *this = Quaternion(omega.unit(), omega.length() * dt) * (*this);
+        *this = Quaternion(glm::normalize(omega), omega.length() * dt) * (*this);
     }
 
     const double BALLRADIUS = 0.8f;
@@ -1074,19 +1079,19 @@ namespace cugl
     void Quaternion::trackball(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
     {
         // Project the mouse points onto a sphere or hyperboloid.
-        Vector v1(x1, y1, project(x1, y1));
-        Vector v2(x2, y2, project(x2, y2));
+        glm::vec3 v1(x1, y1, project(x1, y1));
+        glm::vec3 v2(x2, y2, project(x2, y2));
 
         // Construct the quaternion from these vectors.
-        Vector a = v2 * v1;
-        Vector d = v1 - v2;
+        glm::vec3 a = v2 * v1;
+        glm::vec3 d = v1 - v2;
         double t = d.length() / (2 * BALLRADIUS);
         if (t > 1)
             t = 1;
         if (t < -1)
             t = -1;
         double theta = asin(t);
-        (*this) *= Quaternion(GLfloat(cos(theta)), a.unit() * GLfloat(sin(theta)));
+        (*this) *= Quaternion(GLfloat(cos(theta)), glm::normalize(a) * GLfloat(sin(theta)));
     };
 
 // Friend functions for class Quaternion
