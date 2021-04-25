@@ -585,14 +585,6 @@ int main() {
         }
     });
 
-    // CUGL stuff
-
-    cugl::Vector axis; // Vector pointing at viewer in earth's frame
-    cugl::Quaternion ori; // Orientation of the earth
-
-    //
-
-
 	// Loop until window closed
     GLfloat last_time = 0;
 	while (!main_window.should_close())
