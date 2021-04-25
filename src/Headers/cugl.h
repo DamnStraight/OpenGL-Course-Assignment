@@ -1160,6 +1160,9 @@ namespace cugl
     {
     public:
 
+        friend class Vector;
+        friend class Matrix;
+
         /**
          * Construct the quaternion (1,(0,0,0)) (the null rotation).
          */
