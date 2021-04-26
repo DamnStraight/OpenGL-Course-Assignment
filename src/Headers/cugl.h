@@ -1501,7 +1501,7 @@ namespace cugl
         friend Quaternion exp(const Quaternion & q)
         {
             glm::vec3 a = q.v;
-            GLfloat angle = a.length();
+            GLfloat angle = glm::length(a);
             return (angle == 0) ?
                    Quaternion() :
                    Quaternion(cos(angle), a * sin(angle)/angle);
@@ -1513,7 +1513,7 @@ namespace cugl
          */
         friend Quaternion exp(const glm::vec3& v)
         {
-            GLfloat angle = v.length();
+            GLfloat angle = glm::length(v);
             return (angle == 0) ?
                    Quaternion() :
                    Quaternion(cos(angle), v * sin(angle)/angle);
