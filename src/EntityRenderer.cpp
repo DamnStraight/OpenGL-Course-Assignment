@@ -66,7 +66,7 @@ void EntityRenderer::render(const mat4 & parentTransform, const EntityGroup * gr
     mat4 groupTransform = group->create_transform();
 
     // If entities are present in this group, render them
-    const vector<const Entity*>& groupEntities = group->get_entities();
+    const vector<Entity*>& groupEntities = group->get_entities();
     if (!groupEntities.empty()) {
         for (const Entity * entity : groupEntities) {
             const Mesh * mesh = entity->get_mesh()->get_mesh();

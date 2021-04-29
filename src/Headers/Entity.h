@@ -7,22 +7,26 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "cugl.h"
 #include "TexturedMesh.h"
 
 using glm::mat4;
 using glm::vec3;
+using cugl::Quaternion;
 
 class Entity {
 
 private:
     TexturedMesh * mesh;
     vec3 pos, rot, scaleXYZ;
+    Quaternion qRot;
 
 public:
     Entity(TexturedMesh * mesh);
 
     Entity * translate(const vec3 & translation);
     Entity * rotate(const vec3 & rotation);
+    Entity * rotate(const Quaternion & rotation);
     Entity * scale(const vec3 & scale);
     Entity * scale(float scale);
 

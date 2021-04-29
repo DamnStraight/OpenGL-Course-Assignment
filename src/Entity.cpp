@@ -16,6 +16,11 @@ Entity * Entity::rotate(const vec3 & rotation) {
     return this;
 }
 
+Entity * Entity::rotate(const Quaternion & rotation) {
+    qRot *= rotation;
+    return this;
+}
+
 Entity * Entity::scale(const vec3 & scale) {
     scaleXYZ *= scale;
     return this;
@@ -51,6 +56,9 @@ mat4 Entity::create_transform() const {
     matrix = glm::rotate(matrix, rot.x * glm::pi<float>() / 180.0f, vec3(1, 0, 0));
     matrix = glm::rotate(matrix, rot.y * glm::pi<float>() / 180.0f, vec3(0, 1, 0));
     matrix = glm::rotate(matrix, rot.z * glm::pi<float>() / 180.0f, vec3(0, 0, 1));
+    mat4 qRotMat;
+    qRot.matrix(qRotMat);
+    matrix = qRotMat * matrix;
     matrix = glm::scale(matrix, scaleXYZ);
     return matrix;
 }
