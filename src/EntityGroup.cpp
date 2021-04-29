@@ -2,11 +2,13 @@
 
 #include <glm/gtx/transform2.hpp>
 
-EntityGroup::EntityGroup() :
+EntityGroup::EntityGroup(bool hasToRotate) :
         pos(0, 0, 0),
         rot(0, 0, 0),
         scaleXYZ(1, 1, 1),
-        shear(0) {}
+        shear(0),
+        makeRotate(hasToRotate)
+{}
 
 EntityGroup::EntityGroup(const EntityGroup * src, bool copyTransform) :
         pos(copyTransform ? src->pos : vec3(0, 0, 0)),
@@ -132,13 +134,13 @@ EntityGroup * EntityGroup::set_shearZ(const vec2 & shearZ) {
     return this;
 }
 
-mat4 EntityGroup::create_transform() const {
+mat4 EntityGroup::create_transform() {
     mat4 matrix = glm::translate(mat4(1.0f), pos);
     matrix = glm::shearX3D(matrix, shear[0][0], shear[0][1]);
     matrix = glm::shearY3D(matrix, shear[1][0], shear[1][1]);
     matrix = glm::shearZ3D(matrix, shear[2][0], shear[2][1]);
     matrix = glm::rotate(matrix, rot.x * glm::pi<float>() / 180.0f, vec3(1, 0, 0));
-    matrix = glm::rotate(matrix, rot.y * glm::pi<float>() / 180.0f, vec3(0, 1, 0));
+    matrix = glm::rotate(matrix, (makeRotate ? ++rot.y : rot.y) * glm::pi<float>() / 180.0f, vec3(0, 1, 0));
     matrix = glm::rotate(matrix, rot.z * glm::pi<float>() / 180.0f, vec3(0, 0, 1));
     matrix = glm::scale(matrix, scaleXYZ);
     return matrix;

@@ -17,9 +17,10 @@ private:
     mat3x2 shear;
     vector<const Entity*> entities;
     vector<const EntityGroup*> childrenGroups;
+    bool makeRotate;
 
 public:
-    EntityGroup();
+    EntityGroup(bool = false);
     ~EntityGroup();
     explicit EntityGroup(const EntityGroup * src, bool copyTransform);
 
@@ -44,7 +45,7 @@ public:
     EntityGroup * set_shearY(const vec2 & shear);
     EntityGroup * set_shearZ(const vec2 & shear);
 
-    mat4 create_transform() const;
+    mat4 create_transform();
 
     inline const vector<const Entity*> & get_entities() const {
         return entities;

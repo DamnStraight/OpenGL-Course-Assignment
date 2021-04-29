@@ -63,7 +63,7 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
             ->scale(vec3(0.6f, 2, 1))
             ->translate(vec3(0.75f, 7, 0));
 
-    EntityGroup * letter_s = (new EntityGroup())
+    EntityGroup * letter_s = (new EntityGroup(true))
             ->add(s_1)
             ->add(s_2)
             ->add(s_3)
@@ -84,7 +84,7 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
             ->scale(vec3(2.5f, 1, 1))
             ->translate(vec3(1.25f, 8.5f, 0));
 
-    EntityGroup * letter_c = (new EntityGroup())
+    EntityGroup * letter_c = (new EntityGroup(true))
             ->translate(vec3(5, 0, 0))
             ->add(c_1)
             ->add(c_2)
@@ -103,7 +103,7 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
             ->scale(vec3(0.7f, 6, 1))
             ->translate(vec3(3, 5, 0));
 
-    EntityGroup * letter_n = (new EntityGroup())
+    EntityGroup * letter_n = (new EntityGroup(true))
             ->translate(vec3(10, 0, 0))
             ->add(n_1)
             ->add(n_2)
@@ -126,7 +126,7 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
             ->scale(vec3(0.7f, 6, 1))
             ->translate(vec3(6, 5, 0));
 
-    EntityGroup * letter_m = (new EntityGroup())
+    EntityGroup * letter_m = (new EntityGroup(true))
             ->translate(vec3(16, 0, 0))
             ->add(m_1)
             ->add(m_2)
@@ -138,7 +138,7 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
         ->scale(vec3(0.7f, 7, 1))
         ->translate(vec3(0, 5.5f, 0));
 
-    EntityGroup * letter_i = (new EntityGroup())
+    EntityGroup * letter_i = (new EntityGroup(true))
             ->translate(vec3(25, 0, 0))
             ->add(i_1);
 
@@ -163,7 +163,7 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
             ->scale(vec3(0.6f, 2, 1))
             ->translate(vec3(-1.25f, 4, 0));
 
-    EntityGroup * number_2 = (new EntityGroup())
+    EntityGroup * number_2 = (new EntityGroup(true))
             ->translate(vec3(30, 0, 0))
             ->add(nb2_1)
             ->add(nb2_2)
@@ -185,7 +185,7 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
             ->scale(vec3(0.6f, 3.5f, 1))
             ->translate(vec3(-1.25f, 7.25f, 0));
 
-    EntityGroup * number_4 = (new EntityGroup())
+    EntityGroup * number_4 = (new EntityGroup(true))
             ->translate(vec3(35, 0, 0))
             ->add(nb4_1)
             ->add(nb4_3)
@@ -212,7 +212,7 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
             ->scale(vec3(0.6f, 2, 1))
             ->translate(vec3(2.5f, 4, 0));
 
-    EntityGroup * number_6 = (new EntityGroup())
+    EntityGroup * number_6 = (new EntityGroup(true))
             ->translate(vec3(40, 0, 0))
             ->add(nb6_1)
             ->add(nb6_2)
@@ -230,7 +230,7 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
             ->scale(vec3(2.5f, 1, 1))
             ->translate(vec3(1.25f, 8.5f, 0));
 
-    EntityGroup * number_7 = (new EntityGroup())
+    EntityGroup * number_7 = (new EntityGroup(true))
             ->translate(vec3(45, 0, 0))
             ->add(nb7_1)
             ->add(nb7_2);
@@ -264,7 +264,7 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
             ->scale(vec3(0.6f, 2, 1))
             ->translate(vec3(0, 7, 0));
 
-    EntityGroup * number_8 = (new EntityGroup())
+    EntityGroup * number_8 = (new EntityGroup(true))
             ->translate(vec3(50, 0, 0))
             ->add(nb8_1)
             ->add(nb8_2)

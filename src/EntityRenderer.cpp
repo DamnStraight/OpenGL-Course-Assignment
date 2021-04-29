@@ -63,7 +63,7 @@ void EntityRenderer::render(const Camera & camera, const vector<const EntityGrou
 void EntityRenderer::render(const mat4 & parentTransform, const EntityGroup * group) {
 
     // Transform for the group
-    mat4 groupTransform = group->create_transform();
+    mat4 groupTransform = const_cast<EntityGroup*>(group)->create_transform();
 
     // If entities are present in this group, render them
     const vector<const Entity*>& groupEntities = group->get_entities();
