@@ -585,6 +585,14 @@ int main() {
         }
     });
 
+    std::map<int, std::pair<glm::vec3, double>> rot_speed;
+    rot_speed.insert({ 0, std::make_pair(glm::vec3(.3, .5, .1), 2) });
+    rot_speed.insert({ 1, std::make_pair(glm::vec3(.1, .2, .4), 0.1) });
+    rot_speed.insert({ 2, std::make_pair(glm::vec3(.2, .2, .7), 0.6) });
+    rot_speed.insert({ 3, std::make_pair(glm::vec3(.4, .4, .9), 1) });
+    rot_speed.insert({ 4, std::make_pair(glm::vec3(.9, .1, .2), 0.3) });
+
+
 	// Loop until window closed
     GLfloat last_time = 0;
 	while (!main_window.should_close())
@@ -630,6 +638,17 @@ int main() {
         else if (keys[GLFW_KEY_5])
         {
             selectedModel = models[4];
+        }
+
+        // Rotate
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < models[i]->get_children_groups().size(); j++) {
+                glm::vec3 angle = rot_speed.at(i).first;
+                double rotation_speed = rot_speed.at(i).second;
+
+                models[i]->get_children_groups()[j]->rotate(
+                        cugl::Quaternion(glm::radians(angle.x * rotation_speed), glm::radians(angle.y * rotation_speed), glm::radians(angle.z) * rotation_speed));
+            }
         }
 
 		camera.key_controls(main_window.get_keys(), delta_time, selectedModel);
