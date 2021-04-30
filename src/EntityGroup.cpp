@@ -143,12 +143,12 @@ mat4 EntityGroup::create_transform() const {
     matrix = glm::shearX3D(matrix, shear[0][0], shear[0][1]);
     matrix = glm::shearY3D(matrix, shear[1][0], shear[1][1]);
     matrix = glm::shearZ3D(matrix, shear[2][0], shear[2][1]);
+    mat4 qRotMat;
+    qRot.matrix(qRotMat);
+    matrix *= qRotMat;
     matrix = glm::rotate(matrix, rot.x * glm::pi<float>() / 180.0f, vec3(1, 0, 0));
     matrix = glm::rotate(matrix, rot.y * glm::pi<float>() / 180.0f, vec3(0, 1, 0));
     matrix = glm::rotate(matrix, rot.z * glm::pi<float>() / 180.0f, vec3(0, 0, 1));
-    mat4 qRotMat;
-    qRot.matrix(qRotMat);
-    matrix = qRotMat * matrix;
     matrix = glm::scale(matrix, scaleXYZ);
     return matrix;
 }

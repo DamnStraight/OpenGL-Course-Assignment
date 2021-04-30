@@ -18,6 +18,10 @@
 
 #include "cugl.h"
 
+using glm::vec3;
+using glm::vec4;
+using std::vector;
+
 // When debugging, the code will execute from "out/build/x64-Debug/". That last folder will have the name of your configuration.
 // We need to go three levels back to the root directory and into "src" before we can see the "Shaders" folder.
 // The build directory might be different with other IDEs and OS, just add a preprocessor conditional statement for your case when you encounter it.
@@ -416,6 +420,13 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
 
 }
 
+float frand(float a, float b) {
+    float random = ((float) std::rand()) / (float) RAND_MAX;
+    float diff = b - a;
+    float r = random * diff;
+    return a + r;
+}
+
 void omni_shadow_map_pass(Shader * shader, PointLight * light)
 {
     shader->use_shader();
@@ -585,13 +596,12 @@ int main() {
         }
     });
 
-    std::map<int, std::pair<glm::vec3, double>> rot_speed;
-    rot_speed.insert({ 0, std::make_pair(glm::vec3(.3, .5, .1), 2) });
-    rot_speed.insert({ 1, std::make_pair(glm::vec3(.1, .2, .4), 0.1) });
-    rot_speed.insert({ 2, std::make_pair(glm::vec3(.2, .2, .7), 0.6) });
-    rot_speed.insert({ 3, std::make_pair(glm::vec3(.4, .4, .9), 1) });
-    rot_speed.insert({ 4, std::make_pair(glm::vec3(.9, .1, .2), 0.3) });
-
+    vector<vec4> rotVector;
+    for (int i = 0; i < 25; i++) {
+        vec4 a(frand(-1, 1), frand(-1, 1), frand(-1, 1), frand(0.01, 0.03));
+        std::cout << "(" << a.x << ", " << a.y << ", " << a.z << ", " << a.w << ")" << std::endl;
+        rotVector.push_back(a);
+    }
 
 	// Loop until window closed
     GLfloat last_time = 0;
@@ -642,12 +652,11 @@ int main() {
 
         // Rotate
         for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < models[i]->get_children_groups().size(); j++) {
-                glm::vec3 angle = rot_speed.at(i).first;
-                double rotation_speed = rot_speed.at(i).second;
-
-                models[i]->get_children_groups()[j]->rotate(
-                        cugl::Quaternion(glm::radians(angle.x * rotation_speed), glm::radians(angle.y * rotation_speed), glm::radians(angle.z) * rotation_speed));
+            for (int j = 0; j < models[i]->get_children_groups()[0]->get_children_groups().size(); j++) {
+                vec4 rot = rotVector[i + (5 * j)];
+//                angle *= (float)rotation_speed;
+                models[i]->get_children_groups()[0]->get_children_groups()[j]->rotate(
+                        cugl::Quaternion(vec3(rot.x, rot.y, rot.z), rot.w));
             }
         }
 
