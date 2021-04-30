@@ -599,7 +599,6 @@ int main() {
     vector<vec4> rotVector;
     for (int i = 0; i < 25; i++) {
         vec4 a(frand(-1, 1), frand(-1, 1), frand(-1, 1), frand(0.01, 0.03));
-        std::cout << "(" << a.x << ", " << a.y << ", " << a.z << ", " << a.w << ")" << std::endl;
         rotVector.push_back(a);
     }
 
@@ -654,7 +653,6 @@ int main() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < models[i]->get_children_groups()[0]->get_children_groups().size(); j++) {
                 vec4 rot = rotVector[i + (5 * j)];
-//                angle *= (float)rotation_speed;
                 models[i]->get_children_groups()[0]->get_children_groups()[j]->rotate(
                         cugl::Quaternion(vec3(rot.x, rot.y, rot.z), rot.w));
             }
