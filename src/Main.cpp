@@ -654,7 +654,7 @@ int main() {
             for (int j = 0; j < models[i]->get_children_groups()[0]->get_children_groups().size(); j++) {
                 vec4 rot = rotVector[i + (5 * j)];
                 models[i]->get_children_groups()[0]->get_children_groups()[j]->rotate(
-                        cugl::Quaternion(vec3(rot.x, rot.y, rot.z), rot.w));
+                        cugl::Quaternion(glm::normalize(vec3(rot.x, rot.y, rot.z)), rot.w));
             }
         }
 
