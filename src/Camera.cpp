@@ -143,11 +143,11 @@ void Camera::key_controls(bool* keys, GLfloat delta_time, EntityGroup* const sel
 	// ROTATE LEFT/RIGHT
 	if (keys[GLFW_KEY_B])
 	{
-		selectedModel->rotate(glm::vec3(0.f, .5f, 0.f));
+		selectedModel->get_children_groups()[0]->rotate(cugl::Quaternion(0.f, glm::radians(.5f), 0.f));
 	}
 	else if (keys[GLFW_KEY_N])
 	{
-		selectedModel->rotate(glm::vec3(0.f, -.5f, 0.f));
+		selectedModel->get_children_groups()[0]->rotate(cugl::Quaternion(0.f, glm::radians(-.5f), 0.f));
 	}
     // SHEAR LEFT/RIGHT
     if (keys[GLFW_KEY_COMMA])

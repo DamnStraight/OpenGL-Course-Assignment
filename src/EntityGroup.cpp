@@ -25,7 +25,7 @@ EntityGroup::~EntityGroup() {
     }
 }
 
-EntityGroup * EntityGroup::add(const Entity * entity) {
+EntityGroup * EntityGroup::add(Entity * entity) {
     if (entity == nullptr)
         return this;
     entities.push_back(entity);
@@ -33,13 +33,13 @@ EntityGroup * EntityGroup::add(const Entity * entity) {
 }
 
 
-EntityGroup * EntityGroup::add(const EntityGroup * group) {
+EntityGroup * EntityGroup::add(EntityGroup * group) {
     childrenGroups.push_back(group);
     return this;
 }
 
 
-EntityGroup * EntityGroup::remove(const Entity * entity) {
+EntityGroup * EntityGroup::remove(Entity * entity) {
     for (auto it = entities.begin(); it != entities.end(); ++it) {
         if (*it == entity) {
             entities.erase(it);
@@ -49,7 +49,7 @@ EntityGroup * EntityGroup::remove(const Entity * entity) {
     return this;
 }
 
-EntityGroup * EntityGroup::remove(const EntityGroup * group) {
+EntityGroup * EntityGroup::remove(EntityGroup * group) {
     for (auto it = childrenGroups.begin(); it != childrenGroups.end(); ++it) {
         if (*it == group) {
             childrenGroups.erase(it);
@@ -68,6 +68,12 @@ EntityGroup * EntityGroup::rotate(const vec3 & rotation) {
     rot += rotation;
     return this;
 }
+
+EntityGroup * EntityGroup::rotate(const Quaternion & rotation) {
+    qRot *= rotation;
+    return this;
+}
+
 
 EntityGroup * EntityGroup:: scale(const vec3 & scale) {
     scaleXYZ *= scale;
@@ -137,6 +143,9 @@ mat4 EntityGroup::create_transform() const {
     matrix = glm::shearX3D(matrix, shear[0][0], shear[0][1]);
     matrix = glm::shearY3D(matrix, shear[1][0], shear[1][1]);
     matrix = glm::shearZ3D(matrix, shear[2][0], shear[2][1]);
+    mat4 qRotMat;
+    qRot.matrix(qRotMat);
+    matrix *= qRotMat;
     matrix = glm::rotate(matrix, rot.x * glm::pi<float>() / 180.0f, vec3(1, 0, 0));
     matrix = glm::rotate(matrix, rot.y * glm::pi<float>() / 180.0f, vec3(0, 1, 0));
     matrix = glm::rotate(matrix, rot.z * glm::pi<float>() / 180.0f, vec3(0, 0, 1));

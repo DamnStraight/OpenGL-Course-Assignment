@@ -18,6 +18,10 @@
 
 #include "cugl.h"
 
+using glm::vec3;
+using glm::vec4;
+using std::vector;
+
 // When debugging, the code will execute from "out/build/x64-Debug/". That last folder will have the name of your configuration.
 // We need to go three levels back to the root directory and into "src" before we can see the "Shaders" folder.
 // The build directory might be different with other IDEs and OS, just add a preprocessor conditional statement for your case when you encounter it.
@@ -416,6 +420,13 @@ void create_entities(AssetLoader & loader, EntityManager & entityManager, Entity
 
 }
 
+float frand(float a, float b) {
+    float random = ((float) std::rand()) / (float) RAND_MAX;
+    float diff = b - a;
+    float r = random * diff;
+    return a + r;
+}
+
 void omni_shadow_map_pass(Shader * shader, PointLight * light)
 {
     shader->use_shader();
@@ -585,6 +596,12 @@ int main() {
         }
     });
 
+    vector<vec4> rotVector;
+    for (int i = 0; i < 25; i++) {
+        vec4 a(frand(-1, 1), frand(-1, 1), frand(-1, 1), frand(0.01, 0.03));
+        rotVector.push_back(a);
+    }
+
 	// Loop until window closed
     GLfloat last_time = 0;
 	while (!main_window.should_close())
@@ -630,6 +647,15 @@ int main() {
         else if (keys[GLFW_KEY_5])
         {
             selectedModel = models[4];
+        }
+
+        // Rotate
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < models[i]->get_children_groups()[0]->get_children_groups().size(); j++) {
+                vec4 rot = rotVector[i + (5 * j)];
+                models[i]->get_children_groups()[0]->get_children_groups()[j]->rotate(
+                        cugl::Quaternion(glm::normalize(vec3(rot.x, rot.y, rot.z)), rot.w));
+            }
         }
 
 		camera.key_controls(main_window.get_keys(), delta_time, selectedModel);
